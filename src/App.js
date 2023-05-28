@@ -7,7 +7,7 @@ import DataTable from './components/DataTable';
 function App() {
   
  
-  return  <DataTable />;
+  return  <div className='wrapper'><DataTable /></div>;
 }
 
 export default App;

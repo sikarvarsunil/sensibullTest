@@ -1,11 +1,20 @@
-.App {
+.wrapper {
   text-align: center;
+  max-width: 500px;
+  width: 100%;
+  margin: auto;
 }
 
+.listbox {
+  width: 100%;
+}
 .listitem {
   display: flex;
   align-items: center;
   list-style-type: none;
+}
+.listitem > div {
+  width: 33%;
 }
 .listitem h3 {
   font-size: 16px;
@@ -35,14 +44,17 @@
   color: green;
   font-size: 20px;
   font-weight: bold;
+  min-width: 100px;
 }
 .down {
   color: red;
   font-size: 20px;
   font-weight: bold;
+  min-width: 100px;
 }
 .nochange {
   color: rgb(122, 122, 122);
   font-size: 20px;
   font-weight: bold;
+  min-width: 100px;
 }

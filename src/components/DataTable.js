@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { RequestHandler } from '../clients/';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import poll from '../utils';
 
 const DataTable = () => {
     const [socketUrl, setSocketUrl] = useState('wss://prototype.sbulltech.com/api/ws');
@@ -12,15 +13,20 @@ const DataTable = () => {
             reconnectInterval: 3000,
           });
     const [ status, setStatus] = useState(false);
+    const [ error, setError] = useState('');
     const [ underlyingsData, setUnderlyingsData] = useState([]);
 
-    const getUnderlyingsData = async (url='/underlyings') => {
+    const getUnderlyingsData = (url='/underlyings', timeout=10*60000, interval=10*60000) => {
         
-  
-        const res = await RequestHandler(url, {});
-        const getTokensList = getTokens(res.data.payload);
-        getSubscribe(getTokensList, true)
-        setUnderlyingsData(res.data.payload)
+        poll(function() {
+            return RequestHandler(url, {});
+        }, timeout, interval).then(function(res) {
+            const getTokensList = getTokens(res.data.payload);
+            getSubscribe(getTokensList, true)
+            setUnderlyingsData(res.data.payload)
+        }).catch(function(err) {
+            setError(err);
+        });
         
     }
 
@@ -43,16 +49,16 @@ const DataTable = () => {
     const getDirectiveData = (token) => {
         const url = `/derivatives/${token}`
         setStatus(true);
-        getUnderlyingsData(url)
+        getUnderlyingsData(url, 30000, 3000)
     }
     const onBack = () => {
         const url = `/underlyings`
         setStatus(false);
-        getUnderlyingsData(url)
+        getUnderlyingsData(url, 10*60000, 10*60000)
     }
     useEffect(() => {
         const url = `/underlyings`
-        getUnderlyingsData(url);
+        getUnderlyingsData(url, 10*60000, 10*60000);
         return () => {
             if(underlyingsData) {
                 const getTokensList = getTokens(underlyingsData);
@@ -82,21 +88,21 @@ const DataTable = () => {
 
     return (
         <div>
-            
-            <div><h1>{status ? 'Directive' : 'Underlyings'}</h1>
+            {error && <div>{error}</div>}
+            {!error && <div><h1>{status ? 'Directive' : 'Underlyings'}</h1>
             {status && <button className='back' onClick={() => onBack(false)}>{`< Back `}</button>}
             <ul className='listbox' role='listbox'>
                 {underlyingsData && underlyingsData.length > 0 && underlyingsData.map((item) => (
                     <li key={item.token} role="listitem" className='listitem'>
-                        <h3>{item.underlying}</h3>
-                        <span className={`${item.status}`}>{item.price}</span>
+                        <div><h3>{item.underlying}</h3></div>
+                        <div className={`${item.status}`}>{item.price}</div>
                         <div>
                             {!status && <button onClick={() => getDirectiveData(item.token)}>{`Show directive > `}</button>}
                         </div>
                     </li>
                 ))}
             </ul>
-            </div>
+            </div>}
         </div>
     )
 }
