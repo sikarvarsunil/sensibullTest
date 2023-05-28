@@ -1,0 +1,48 @@
+.App {
+  text-align: center;
+}
+
+.listitem {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+}
+.listitem h3 {
+  font-size: 16px;
+  margin-right: 20px;
+}
+.listitem button{
+  margin: 0 15px;
+  background-color: pink;
+  border: 0;
+  box-shadow: gray 1px 1px 2px 1px;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.back{
+  margin: 0 15px;
+  background-color: rgb(203, 203, 203);
+  border: 0;
+  box-shadow: gray 1px 1px 2px 1px;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.up {
+  color: green;
+  font-size: 20px;
+  font-weight: bold;
+}
+.down {
+  color: red;
+  font-size: 20px;
+  font-weight: bold;
+}
+.nochange {
+  color: rgb(122, 122, 122);
+  font-size: 20px;
+  font-weight: bold;
+}
